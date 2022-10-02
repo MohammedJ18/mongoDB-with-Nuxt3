@@ -1,1 +1,1 @@
-DATABASE_URL="mongodb+srv://<name>:<password>@cluster0.xpylajm.mongodb.net/<dbName>?retryWrites=true&w=majority"
+DATABASE_URL="mongodb+srv://jawy:O1P9q2m3MAoTxksL@cluster0.s57ldam.mongodb.net/test1"
