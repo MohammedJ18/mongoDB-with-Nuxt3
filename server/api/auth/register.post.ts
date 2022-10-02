@@ -28,9 +28,9 @@ export default defineEventHandler(async (event) => {
     name,
   };
 
-  //   const user = await createUser(userData);
+  const user = await createUser(userData);
 
   return {
-    body: "asdasdasdz",
+    body: userTransformer(user),
   };
 });
