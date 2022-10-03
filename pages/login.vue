@@ -1,13 +1,11 @@
 <template>
     <div>
-        hi it's me
+        <Auth />
     </div>
 </template>
 
 <script setup>
-definePageMeta({
-    middleware: ['auth'],
-})
+
 </script>
 
 <style>
