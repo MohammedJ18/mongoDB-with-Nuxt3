@@ -1,6 +1,6 @@
 <template>
     <div>
-        asd
+        <Auth />
     </div>
 </template>
 
