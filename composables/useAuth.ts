@@ -82,7 +82,7 @@ export default () => {
       try {
         const data = await useFetch("/api/auth/user");
         console.log(data);
-        setUser(data.user);
+        //setUser(data.user);
         resolve(true);
       } catch (error) {
         reject(error);
