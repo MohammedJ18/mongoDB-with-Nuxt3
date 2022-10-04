@@ -4,7 +4,7 @@ export default (url, options = {}) => {
   return $fetch(url, {
     ...options,
     headers: {
-      ...options.headers,
+      ...options,
       Authorization: `Bearer ${useAuthToken().value}`,
     },
   });
