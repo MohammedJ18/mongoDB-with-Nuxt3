@@ -1,6 +1,9 @@
 <script lang="ts" setup>
+import { env } from "process";
+import * as Realm from "realm-web";
 const isSignUp = ref(false)
 
+const app = new Realm.App({ id: "application-0-ajwht" });
 
 const info = reactive({
     username: '',
@@ -11,40 +14,75 @@ const info = reactive({
 
 
 })
-async function signIn() {
-
-    const { login } = useAuth()
-    try {
-        await login({ username: info.username, password: info.password })
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 async function signUp() {
-
-    const { register } = useAuth()
     try {
-        await register({
-            username: info.username,
-            password: info.password,
-            repeatPassword: info.confirmPassword,
-            email: info.email,
+        //Create a new email/password account
+        await app.emailPasswordAuth.registerUser(info.email, info.password);
+
+        //Log the user in
+        await app.logIn(Realm.Credentials.emailPassword(info.email, info.password));
+
+        //Create a new profile document
+        const mongo = app.currentUser.mongoClient("mongodb-atlas");
+        const collection = mongo.db("nuxt").collection("profile");
+
+        const res = await collection.insertOne({
+            user_id: app.currentUser.id,
             name: info.name,
+        });
+    } catch (err) {
+        console.error("Failed to log in", err);
+    }
+}
 
-        })
-    } catch (error) {
-        console.log(error)
-    }
-}
-async function getAuth() {
-    const { getUser } = useAuth()
+async function signIn() {
+    const credentials = Realm.Credentials.emailPassword(info.username, info.password);
     try {
-        await getUser()
-    } catch (error) {
-        console.log(error)
+        const user = await app.logIn(credentials);
+        console.log(`Successfully logged in as user ${user.id}`);
+    } catch (err) {
+        console.error("Failed to log in", err);
     }
+
 }
+
+
+
+// async function signIn() {
+
+//     const { login } = useAuth()
+//     try {
+//         await login({ username: info.username, password: info.password })
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+
+// async function signUp() {
+
+//     const { register } = useAuth()
+//     try {
+//         await register({
+//             username: info.username,
+//             password: info.password,
+//             repeatPassword: info.confirmPassword,
+//             email: info.email,
+//             name: info.name,
+
+//         })
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+// async function getAuth() {
+//     const { getUser } = useAuth()
+//     try {
+//         await getUser()
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 
 </script>
 
@@ -54,11 +92,10 @@ async function getAuth() {
             <p v-if="!isSignUp" class="text-white mt-8">Sign in via username and password</p>
             <p v-else class="text-white">SignUp</p>
             <div class="flex flex-col">
-                <input type="text" placeholder="Your username" v-model="info.username" />
+                <input class="mt-2" type="email" placeholder="Your email" v-model="info.email" />
+                <!-- <input type="text" placeholder="Your username" v-model="info.username" /> -->
                 <input class="mt-2" type="password" placeholder="Your password" v-model="info.password" />
                 <div class="flex flex-col mt-2" v-if="isSignUp">
-                    <input class="mt-2" type="password" placeholder="Your password" v-model="info.confirmPassword" />
-                    <input class="mt-2" type="email" placeholder="Your email" v-model="info.email" />
                     <input class="mt-2" type="text" placeholder="name" v-model="info.name" />
                 </div>
             </div>
@@ -73,7 +110,4 @@ async function getAuth() {
             </div>
         </div>
     </form>
-
-    <button @click="getAuth()" class="w-full bg-green text-sm text-center" type="submit"><span > getUser </span>
-    </button>
 </template>
