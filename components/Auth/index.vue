@@ -37,6 +37,14 @@ async function signUp() {
         console.log(error)
     }
 }
+async function getAuth() {
+    const { getUser } = useAuth()
+    try {
+        await getUser()
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 </script>
 
@@ -65,4 +73,7 @@ async function signUp() {
             </div>
         </div>
     </form>
+
+    <button @click="getAuth()" class="w-full bg-green text-sm text-center" type="submit"><span > getUser </span>
+    </button>
 </template>

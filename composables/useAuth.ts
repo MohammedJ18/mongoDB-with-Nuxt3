@@ -81,7 +81,7 @@ export default () => {
     return new Promise(async (resolve, reject) => {
       try {
         const data = await useFetch("/api/auth/user");
-
+        console.log(data);
         setUser(data.user);
         resolve(true);
       } catch (error) {
@@ -150,5 +150,6 @@ export default () => {
     useAuthLoading,
     logout,
     register,
+    getUser,
   };
 };
